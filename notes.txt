@@ -1,5 +1,0 @@
-mongodb+srv://<username>:<password>@devconnect-l4dhe.mongodb.net/test?retryWrites=true&w=majority
-
-
-user = laurence
-pw = ZSuPKWsM2rk9lSOk

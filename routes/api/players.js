@@ -29,4 +29,10 @@ router.post('/',
     res.send('Players Submitted!');
 });
 
+router.get('/',
+(req, res) => {
+    res.send('Players Route');
+});
+
+
 module.exports = router;
