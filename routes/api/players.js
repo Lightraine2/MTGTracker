@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const {check, validationResult} = require('express-validator');
 
-// @ route POST api/players
-// @ desc Test route (get player data to render into table)
+// @ route Put api/players
+// @ desc       Register user (on second thought, maybe i dont want decklist here) 
 // @ Access - actually we wont have token based auth yet. Just basic auth
 // For this post, we want to update scores, decks, avatar, idk. 
 
@@ -24,6 +24,9 @@ router.put('/',
     
     res.send('Player Added!');
 });
+
+// @ route GET /api/players
+
 
 router.get('/',
 (req, res) => {
