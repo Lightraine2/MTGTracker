@@ -4,8 +4,8 @@
   "description": "Web App for MTG Tournaments",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
-    "server": "nodemon app",
+    "start": "node server",
+    "server": "nodemon server",
     "test": "test"
   },
   "author": "Laurence Dale @ Strix",
