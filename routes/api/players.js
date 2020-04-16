@@ -17,15 +17,14 @@ const Player = require('../../models/Player');
 
 router.post('/', 
 [
-    check('name', 'Name is required')
+    check('name', 'Username is required')
     .not()
     .isEmpty(),
     check('password', 'Password is required')
     .not()
     .isEmpty(),
-    check('decklist', 'MTG Goldfish Tournament decklist is required')
-    .not()
-    .isEmpty()
+    check('email', 'email address is required')
+    .isEmail()
 ], 
 async (req, res) => {
     const errors = validationResult(req);
@@ -33,7 +32,7 @@ async (req, res) => {
         return res.status(400).json({errors: errors.array()});
     } 
 
-    const {name, email, password, decklist} = req.body;
+    const {name, email, password} = req.body;
 
 
     try {
@@ -51,8 +50,8 @@ async (req, res) => {
     player = new Player({
         name,
         email,
-        password,
-        decklist
+        password
+       
     });
 
     // encrypt password
