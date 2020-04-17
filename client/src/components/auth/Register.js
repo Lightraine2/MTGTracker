@@ -13,13 +13,15 @@ const Register = () => {
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
         if(password !== password2) {
             console.log('Passwords do no match');
             } else {
-                console.log(formData);
-            }
+              console.log('Success');
+              }
+
+            
     };
 
 
@@ -74,7 +76,7 @@ const Register = () => {
         <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">
-        Already have an account? <Link to="login.html">Sign In</Link>
+        Already have an account? <Link to="/login">Sign In</Link>
       </p>
       </Fragment>
     )
