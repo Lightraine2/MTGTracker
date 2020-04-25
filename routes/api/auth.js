@@ -32,12 +32,8 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', 
 [
-    check('name', 'Name is required')
-    .not()
-    .isEmpty(),
-    check('password', 'Password is required')
-    .not()
-    .isEmpty()
+    check('email', 'Email is required').isEmail(),
+    check('password', 'Password is required').exists()
 ], 
 
 async (req, res) => {
@@ -46,14 +42,14 @@ async (req, res) => {
         return res.status(400).json({errors: errors.array()});
     } 
 
-    const {name, password} = req.body;
+    const {email, password} = req.body;
 
 
     try {
 
     // need to check if user is unique
 
-    let player = await Player.findOne({ name });
+    let player = await Player.findOne({ email });
     
     if (!player) {
         res.status(400).json({errors: [{ msg: 'Authentication Failed'}]});
