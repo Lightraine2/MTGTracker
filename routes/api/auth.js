@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const auth = require('../../middleware/auth');
-const Player = require('../../models/Player')
+const Player = require('../../models/User')
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const {check, validationResult} = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 
 // @ route GET api/auth
@@ -13,14 +13,14 @@ const {check, validationResult} = require('express-validator');
 // @ Access - public
 
 router.get('/', auth, async (req, res) => {
-  try {
-    const player = await Player.findById(req.player.id).select('-password');
-    res.json(player);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  } 
-  
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+
 });
 
 
@@ -30,65 +30,65 @@ router.get('/', auth, async (req, res) => {
 // 
 
 
-router.post('/', 
-[
-    check('email', 'Email is required').isEmail(),
-    check('password', 'Password is required').exists()
-], 
+router.post('/',
+    [
+        check('email', 'Email is required').isEmail(),
+        check('password', 'Password is required').exists()
+    ],
 
-async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
-    } 
-
-    const {email, password} = req.body;
-
-
-    try {
-
-    // need to check if user is unique
-
-    let player = await Player.findOne({ email });
-    
-    if (!player) {
-        res.status(400).json({errors: [{ msg: 'Authentication Failed'}]});
-    }
-
-    // Check creds
-
-    const isMatch = await bcrypt.compare(password, player.password);
-
-    if(!isMatch) {
-      res.status(400).json({errors: [{ msg: 'Authentication Failed'}]});
-    }
-
-    // return jwt
-
-    const payload = {
-        player: {
-            id: player.id
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-    };
 
-    jwt.sign(
-        payload, 
-        config.get('jwtSecret'),
-        // this should be 3600 for an hour
-        { expiresIn: 360000 },
-        (err, token) => {
-            if(err) throw err;
-            res.json({ token });
-        });        
-    
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).send('Server Error');   
-    }
-    
+        const { email, password } = req.body;
 
 
-});
+        try {
+
+            // need to check if user is unique
+
+            let user = await User.findOne({ email });
+
+            if (!user) {
+                res.status(400).json({ errors: [{ msg: 'Authentication Failed' }] });
+            }
+
+            // Check creds
+
+            const isMatch = await bcrypt.compare(user, user.password);
+
+            if (!isMatch) {
+                res.status(400).json({ errors: [{ msg: 'Authentication Failed' }] });
+            }
+
+            // return jwt
+
+            const payload = {
+                user: {
+                    id: user.id
+                }
+            };
+
+            jwt.sign(
+                payload,
+                config.get('jwtSecret'),
+                // this should be 3600 for an hour
+                { expiresIn: 360000 },
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({ token });
+                });
+
+        } catch (err) {
+            console.log(err.message);
+            res.status(500).send('Server Error');
+        }
+
+
+
+    });
 
 
 module.exports = router;
