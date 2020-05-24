@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
- 
+
 const Landing = () => {
-    return (
-<section className="landing">
+  return (
+    <section className="landing">
       <div className="dark-overlay">
         <div className="landing-inner">
-          <h1 className="x-large">Tournament Tracker</h1>
+          <h1 className="x-large">Open Dojo</h1>
           <p className="lead">
-            Remember that time you kept a 5 lander and drew nothing but lands? This app remembers.
+            Martial Arts Club Management | Contact Tracing | Media and More
           </p>
           <div className="buttons">
             <Link to="/register" className="btn btn-primary">Sign Up</Link>
@@ -17,7 +17,7 @@ const Landing = () => {
         </div>
       </div>
     </section>
-    )
+  )
 }
 
 export default Landing;
