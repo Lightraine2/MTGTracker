@@ -8,12 +8,10 @@ const { check, validationResult } = require('express-validator');
 //Bring in player model
 const Player = require('../../models/User');
 
-// @ route POST api/players
-// @ desc       Register user (on second thought, maybe i dont want decklist here) 
+// @ route POST api/Users
+
+// @ desc       Register user 
 // @ Access - public - i guess? I mean, we probably need to provide a registration key to lock it down to only users we want
-// 
-//  function takes a username, password and decklist  
-// 
 
 router.post('/',
     [
@@ -89,58 +87,63 @@ router.post('/',
 
     });
 
-// @ route GET /api/players
+// @ route GET /api/users
 // @desc    Login User / Returning JWT Token
 // @access  Public
 
 router.get('/', (req, res) => {
-    res.send('This is the players route')
+    res.send('This is the users route')
 });
 
-// router.post('/login', (req, res) => {
-//     const { errors, isValid } = validateLoginInput(req.body);
+// @ route POST /api/users/login
+// @desc    Login User / Returning JWT Token
+// @access  Public
 
-//     // Check Validation
-//     if (!isValid) {
-//       return res.status(400).json(errors);
-//     }
 
-//     const email = req.body.email;
-//     const password = req.body.password;
+router.post('/login', (req, res) => {
+    const { errors, isValid } = validateLoginInput(req.body);
 
-//     // Find user by email
-//     User.findOne({ email }).then(user => {
-//       // Check for user
-//       if (!user) {
-//         errors.email = 'User not found';
-//         return res.status(404).json(errors);
-//       }
+    // Check Validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
 
-//       // Check Password
-//       bcrypt.compare(password, user.password).then(isMatch => {
-//         if (isMatch) {
-//           // User Matched
-//           const payload = { id: user.id, name: user.name, avatar: user.avatar }; // Create JWT Payload
+    const email = req.body.email;
+    const password = req.body.password;
 
-//           // Sign Token
-//           jwt.sign(
-//             payload,
-//             keys.secretOrKey,
-//             { expiresIn: 3600 },
-//             (err, token) => {
-//               res.json({
-//                 success: true,
-//                 token: 'Bearer ' + token
-//               });
-//             }
-//           );
-//         } else {
-//           errors.password = 'Password incorrect';
-//           return res.status(400).json(errors);
-//         }
-//       });
-//     });
-//   });
+    // Find user by email
+    User.findOne({ email }).then(user => {
+        // Check for user
+        if (!user) {
+            errors.email = 'User not found';
+            return res.status(404).json(errors);
+        }
+
+        // Check Password
+        bcrypt.compare(password, user.password).then(isMatch => {
+            if (isMatch) {
+                // User Matched
+                const payload = { id: user.id, name: user.name, avatar: user.avatar }; // Create JWT Payload
+
+                // Sign Token
+                jwt.sign(
+                    payload,
+                    keys.secretOrKey,
+                    { expiresIn: 3600 },
+                    (err, token) => {
+                        res.json({
+                            success: true,
+                            token: 'Bearer ' + token
+                        });
+                    }
+                );
+            } else {
+                errors.password = 'Password incorrect';
+                return res.status(400).json(errors);
+            }
+        });
+    });
+});
 
 
 module.exports = router;

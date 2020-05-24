@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const auth = require('../../middleware/auth');
-const Player = require('../../models/User')
+const User = require('../../models/User')
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
@@ -57,7 +57,7 @@ router.post('/',
 
             // Check creds
 
-            const isMatch = await bcrypt.compare(user, user.password);
+            const isMatch = await bcrypt.compare(password, user.password);
 
             if (!isMatch) {
                 res.status(400).json({ errors: [{ msg: 'Authentication Failed' }] });

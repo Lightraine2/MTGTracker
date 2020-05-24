@@ -16,7 +16,7 @@ const ProfileSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required
+        required: true
     },
     skills: {
         type: [String],
