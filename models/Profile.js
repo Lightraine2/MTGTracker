@@ -28,6 +28,19 @@ const ProfileSchema = new mongoose.Schema({
     githubusername: {
         type: String
     },
+    sessions: [
+        {
+            title: {
+                type: String,
+                required: true
+            },
+            _sessionId: {
+                type: String,
+                required: true
+            }
+        }
+
+    ],
     experience: [
         {
             title: {

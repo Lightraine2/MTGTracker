@@ -157,6 +157,53 @@ router.delete('/', async (req, res) => {
     }
 });
 
+// @route PUT api/profile/sessions
+// @desc Add attended sessions
+// @access Private
+
+router.put('/sessions', [auth, [
+    check('title', 'Title is required')
+        .not()
+        .isEmpty(),
+    check('_sessionId', 'Session ID is required')
+        .not()
+        .isEmpty()
+]
+],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+
+        const {
+            title,
+            _sessionId
+        } = req.body;
+
+        const newSession = {
+            title,
+            _sessionId
+        }
+
+        try {
+            const profile = await Profile.findOne({ user: req.user.id });
+
+            profile.sessions.unshift(newSession);
+
+            await profile.save();
+
+            res.json(profile);
+
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error');
+        }
+    }
+
+);
+
 
 module.exports = router;
 
