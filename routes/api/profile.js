@@ -205,20 +205,23 @@ router.put('/sessions', [auth, [
 );
 
 // @route DELETE api/profile/sessions/:session_id
+// @desc    remote sessions from attendance
+// @access  private
+//can use this template for any delete action 
 
 router.delete('/sessions/:session_id', auth, async (req, res) => {
     try {
-       const profile = await Profile.findOne({ user: req.user.id});
-       
-       // Get remote index
-       const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.session_id);
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        // Get remote index
+        const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.session_id);
 
         profile.experience.splice(removeIndex, 1);
 
         await profile.save();
 
         res.json(profile);
-        
+
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
