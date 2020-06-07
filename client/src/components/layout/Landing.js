@@ -1,7 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
-const Landing = () => {
+// so this is because we want to avoid the landing page for an authenticated user. To do this we need to interact with the state
+// state interaction = need connect and prop types. Proptypes are what part of the state you are interested in
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+const Landing = ({ isAuthenticated }) => {
+
+  if(isAuthenticated){
+   return <Redirect to='/dashboard' />;
+  }
+
   return (
     <section className="landing">
       <div className="dark-overlay">
@@ -20,4 +30,14 @@ const Landing = () => {
   )
 }
 
-export default Landing;
+// check if user is authd. If so, redirect to dashboard
+
+Landing.propTypes = {
+  isAuthenticated: PropTypes.bool
+}
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps)(Landing);
