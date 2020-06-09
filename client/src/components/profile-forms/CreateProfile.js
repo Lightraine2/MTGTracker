@@ -1,11 +1,13 @@
 import React, { Fragment, useState } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { createProfile } from '../../actions/profile';
 
 // here is where we use the web UI to update user profile objects.
 // in this case, we just do 'skills' but we also need to add sessions attended etc. club memberships?
 
-export const CreateProfile = props => {
+export const CreateProfile = ({ createProfile, history }) => {
     const [formData, setFormData] = useState({
         skills: ''
     });
@@ -20,6 +22,11 @@ export const CreateProfile = props => {
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const onSubmit = e => {
+        e.preventDefault();
+        createProfile(formData, history);
+    }
+
     return (
         <Fragment>
             <h1 className="large text-primary">
@@ -30,7 +37,7 @@ export const CreateProfile = props => {
         profile stand out
       </p>
             <small>* = required field</small>
-            <form className="form">
+            <form className='form' onSubmit={e => onSubmit(e)}>
                 <div className="form-group">
                     <select name="status">
                         <option value="0">* Select Professional Status</option>
@@ -124,11 +131,14 @@ export const CreateProfile = props => {
                 <a className="btn btn-light my-1" href="dashboard.html">Go Back</a>
             </form>
         </Fragment>
-    )
-}
+    );
+};
 
 CreateProfile.propTypes = {
+    createProfile: PropTypes.func.isRequired,
+};
 
-}
 
-export default CreateProfile
+
+
+export default connect(null, { createProfile })(withRouter(CreateProfile));
